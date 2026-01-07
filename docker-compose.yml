@@ -1,0 +1,45 @@
+services:
+  lskypro:
+    build:
+      context: .
+      dockerfile: Dockerfile-simple
+    container_name: lskypro-official
+    restart: unless-stopped
+    ports:
+      - "8091:80"
+    volumes:
+      - .:/var/www/html
+    environment:
+      - APP_NAME=LskyPro
+      - APP_ENV=production
+      - APP_DEBUG=false
+      - APP_URL=http://localhost:8091
+      - DB_CONNECTION=mysql
+      - DB_HOST=lskypro-db-official
+      - DB_PORT=3306
+      - DB_DATABASE=lskypro
+      - DB_USERNAME=lskypro
+      - DB_PASSWORD=lskypro_password_123
+    depends_on:
+      lskypro-db-official:
+        condition: service_healthy
+  
+  lskypro-db-official:
+    image: mysql:8.0
+    container_name: lskypro-db-official
+    restart: unless-stopped
+    environment:
+      - MYSQL_ROOT_PASSWORD=root_password_123
+      - MYSQL_DATABASE=lskypro
+      - MYSQL_USER=lskypro
+      - MYSQL_PASSWORD=lskypro_password_123
+    volumes:
+      - lskypro-db-data:/var/lib/mysql
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-uroot", "-proot_password_123"]
+      timeout: 5s
+      retries: 10
+      interval: 10s
+
+volumes:
+  lskypro-db-data:
