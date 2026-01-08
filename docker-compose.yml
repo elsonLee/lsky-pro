@@ -19,7 +19,7 @@ services:
       - DB_PORT=3306
       - DB_DATABASE=lskypro
       - DB_USERNAME=lskypro
-      - DB_PASSWORD=lskypro_password_123
+      - DB_PASSWORD=xxxxxx
     depends_on:
       lskypro-db-official:
         condition: service_healthy
@@ -32,7 +32,7 @@ services:
       - MYSQL_ROOT_PASSWORD=root_password_123
       - MYSQL_DATABASE=lskypro
       - MYSQL_USER=lskypro
-      - MYSQL_PASSWORD=lskypro_password_123
+      - MYSQL_PASSWORD=xxxxxx
     volumes:
       - lskypro-db-data:/var/lib/mysql
     healthcheck:

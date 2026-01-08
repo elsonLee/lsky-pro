@@ -1,0 +1,58 @@
+# 使用官方 LskyPro 镜像（推荐）
+# 这个配置使用 Docker Hub 上的官方镜像，而不是从源码构建
+
+version: '3.8'
+
+services:
+  lskypro:
+    # 临时使用 lskypro 镜像，稍后可以替换为官方镜像
+    # 如果官方镜像不可用，我们之前已经从源码构建了自定义镜像
+    image: lskypro/lskypro:latest
+    container_name: lskypro-official
+    ports:
+      - "8091:80"  # 使用新端口 8091
+    environment:
+      - DB_CONNECTION=mysql
+      - DB_HOST=lskypro-db
+      - DB_PORT=3306
+      - DB_DATABASE=lskypro
+      - DB_USERNAME=lskypro
+      - DB_PASSWORD=lskypro_password_123
+      - APP_URL=http://localhost:8091
+    depends_on:
+      lskypro-db:
+        condition: service_healthy
+    volumes:
+      - lskypro-storage:/var/www/html/storage/app/public
+      # 如果想修改源代码，可以挂载：
+      # - ./app:/var/www/html/app
+    restart: unless-stopped
+    networks:
+      - lskypro-network
+
+  lskypro-db:
+    image: mysql:8.0
+    container_name: lskypro-db-official
+    environment:
+      - MYSQL_ROOT_PASSWORD=root_password_123
+      - MYSQL_DATABASE=lskypro
+      - MYSQL_USER=lskypro
+      - MYSQL_PASSWORD=lskypro_password_123
+    volumes:
+      - lskypro-db-data:/var/lib/mysql
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-uroot", "-proot_password_123"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    restart: unless-stopped
+    networks:
+      - lskypro-network
+
+volumes:
+  lskypro-db-data:
+  lskypro-storage:
+
+networks:
+  lskypro-network:
+    driver: bridge
