@@ -35,6 +35,24 @@ docker exec lskypro-official apachectl graceful
 数据库密码: 1Qaz2wsx
 ```
 
+### 重要：.env 文件配置
+
+`.env` 文件被 .gitignore 忽略，需要手动配置。在首次部署前，确保 `.env` 文件中的数据库配置正确：
+
+```env
+DB_CONNECTION=mysql
+DB_HOST=lskypro-db-official
+DB_PORT=3306
+DB_DATABASE=lskypro
+DB_USERNAME=lskypro
+DB_PASSWORD=1Qaz2wsx
+```
+
+配置后执行以下命令清除缓存：
+```bash
+docker exec lskypro-official php artisan config:clear
+```
+
 ## 修改数据库密码
 
 如需修改数据库密码，需要编辑 `docker-compose.yml` 文件中的两处：
