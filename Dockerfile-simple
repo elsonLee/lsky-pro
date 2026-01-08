@@ -8,6 +8,9 @@ RUN docker-php-ext-enable imagick
 
 RUN docker-php-ext-install pdo_mysql
 
+# Enable Apache mod_rewrite
+RUN a2enmod rewrite
+
 RUN { \
     echo 'post_max_size = 100M'; \
     echo 'upload_max_filesize = 100M'; \
