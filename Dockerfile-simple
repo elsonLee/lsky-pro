@@ -6,7 +6,7 @@ RUN pecl install imagick
 
 RUN docker-php-ext-enable imagick
 
-RUN docker-php-ext-install pdo_mysql
+RUN docker-php-ext-install pdo_mysql bcmath
 
 # Enable Apache mod_rewrite
 RUN a2enmod rewrite
